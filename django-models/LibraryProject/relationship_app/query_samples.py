@@ -8,11 +8,22 @@ def query_books_by_author(author_name):
     return []
 
 # List all books in a library
+from relationship_app.models import Library
+
 def list_books_in_library(library_name):
-    library = Library.objects.filter(name=library_name).first()
-    if library:
-        return library.books.all()
-    return []
+    try:
+        # Get the library object by name
+        library = Library.objects.get(name=library_name)
+        
+        # Assuming the library has a related set of books, you can list them
+        books = library.books.all()  # Modify according to your actual model relationship
+        for book in books:
+            print(f"Book Title: {book.title}, Author: {book.author.name}, Published: {book.publication_date}")
+    except Library.DoesNotExist:
+        print(f"Library with name '{library_name}' does not exist.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 
 # Retrieve the librarian for a library
 def get_librarian_for_library(library_name):
